@@ -13,3 +13,6 @@ Se possivel para receber o enum tipo de arquivo talvez no contrutor da classe PD
 
 
 Levei em consideração não quebrar a chamada do metodo para os cliente antigo.  Imagine que o parametro TipoDcumento e acessado pelo cliente para setar o tipo de arquivo que ele quer converter.
+
+
+Obs. o codigo foi feito da ide eclipse.
