@@ -1,11 +1,20 @@
-public class ConversorPDF {
+package main.java;
 
-    // A aplicação foi projetada para tratar arquivos WORD, temos que cuidar para que
-    // alterações não mudem o comportamento, para que não exista reflexo para clientes
-    // legados
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.Objects;
+
+public class PDFConverter{
+
+
     public String tipoDocumento = "WORD";
 
+
+
     /**
+     * Levei em consideração não quebrar a chamada do metodo para os cliente antigo.
+     * Imagine que o parametro TipoDcumento e acessado pelo cliente para setar o tipo de arquivo que ele quer converter.
      * Esse método recebe o como entrada o arquivo que vai ser convertido
      * para PDF
      *
@@ -13,22 +22,26 @@ public class ConversorPDF {
      * @return
      */
     public byte[] converteParaPDF(byte[] bytesArquivo){
-        if(tipoDocumento.equals("WORD")) {
-            InputStream entrada = new ByteArrayInputStream(bytesArquivo);
-            com.aspose.words.Document documentoWord = new com.aspose.words.Document(entrada);
-            ByteArrayOutputStream documentoPDF = new ByteArrayOutputStream();
-            documentoWord.save(documentoPDF, SaveFormat.PDF);
 
-            return documentoPDF.toByteArray();
-        } else {
-            InputStream entrada = new ByteArrayInputStream(bytesArquivo);
-            Workbook workbook = new Workbook(entrada);
-            PdfSaveOptions opcaoSalvar = new PdfSaveOptions();
-            opcaoSalvar.setCompliance(PdfCompliance.PDF_A_1_B);
-            ByteArrayOutputStream documentoPDF = new ByteArrayOutputStream();
-            workbook.save(documentoPDF, opcaoSalvar);
+        if(Objects.isNull(bytesArquivo)){
 
-            return documentoPDF.toByteArray();
+            throw new IllegalArgumentException("Arquivo para conversao null");
         }
+
+        InputStream entrada = new ByteArrayInputStream(bytesArquivo);
+        EnumTipoArquivo arquivo = EnumTipoArquivo.seachTipoArquivo(tipoDocumento);
+
+        if(Objects.isNull(arquivo)){
+
+            throw new IllegalArgumentException("tipo de arquivo não encontrado");
+        }
+
+
+        ByteArrayOutputStream byteArrayOutputStream = arquivo.convertParaPDf(entrada);
+        return  byteArrayOutputStream.toByteArray();
     }
+
+
+
+
 }
